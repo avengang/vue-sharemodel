@@ -1,0 +1,22 @@
+{
+  "name": "vue-sharemodel",
+  "version": "1.0.0",
+  "description": "vue全局对象",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/avengang/vue-sharemodel.git"
+  },
+  "keywords": [
+    "sharemodel"
+  ],
+  "author": "avengang",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/avengang/vue-sharemodel/issues"
+  },
+  "homepage": "https://github.com/avengang/vue-sharemodel#readme"
+}

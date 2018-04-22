@@ -21,9 +21,13 @@ module.exports = function(source) {
 	for(var i=0,ii=storeKeys.length;i<ii;i++) {
 		storeStr += "Object.defineProperty(window._storeObj, '"+storeKeys[i]
 		+"', {\n set: function(v) {\n "
-						+"for(var i=0,ii=window._storeListeners.length;i<ii;i++) {\n "
-							+"window.__storeObj."+storeKeys[i]+" = v;\n "
-							+"window._storeListeners[i] && window._storeListeners[i](v, '"+storeKeys[i]+"');\n"
+						+"for(var i=0;i<window._storeListeners.length;i++) {\n "
+							+"if(window._storeListeners[i]) {\n"
+								+"window.__storeObj."+storeKeys[i]+" = v;\n "
+								+"window._storeListeners[i](v, '"+storeKeys[i]+"');\n"
+							+"} else {\n"
+								+"window._storeListeners.splice(i, 1);\n"
+							+"}"
 						+"}\n"
 					+"}\n"
 				+"});\n";
