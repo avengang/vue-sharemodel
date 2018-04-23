@@ -14,9 +14,37 @@ module.exports = function(source) {
 	var cpath = __dirname.replace("\\node_modules\\vue-storescanner-loader", "");
 	var componentPath = this.resourcePath.replace(cpath, "").replace(/\\/g, "_")
 		.replace(/\//g, "_").replace(".vue", "");
+		
+	if(componentPath.indexOf(":") != -1) {
+		componentPath = componentPath.split(":")[1];
+	}
 	var options = loaderUtils.getOptions(this);
   	source = dealSource(source, componentPath);
-	var storeStr = "window._storeObj = function() {}\n window.__storeObj = {};\n";
+	var storeStr = "window._storeObj = function() {}\n window.__storeObj = {};\n"
+					+"window.$setShareModel = "
+					+"function(k, p1, p2) {\n"
+						+"if(k.indexOf('window._storeObj') == -1) {\n"
+							+"throw new Error('$setShareModel方法必须以@store.param的形式传参');\n"
+							+"return;\n"
+						+"}\n"
+						+"k = k.replace('window._storeObj', '');\n"
+						+"if(p2) {\n"
+							+"var o = window.__storeObj[k];\n"
+							+"o[p1] = p2;\n"
+							+"window._storeObj[k] = o;\n"
+						+"} else {\n"
+							+"window._storeObj[k] = p1;\n"
+						+"};\n"
+					+"window.$initShareModel = "
+					+"function(k, v) {\n"
+						+"if(k.indexOf('window._storeObj') == -1) {\n"
+							+"throw new Error('$initShareModel方法必须以@store.param的形式传参');\n"
+							+"return;\n"
+						+"}\n"
+						+"k = k.replace('window._storeObj', '');\n"
+						+"if(window.__storeObj[k]==null || window.__storeObj[k]==undefined) {\n"
+							+"window._storeObj[k] = v;\n"
+						+"};\n";
 	
 	for(var i=0,ii=storeKeys.length;i<ii;i++) {
 		storeStr += "Object.defineProperty(window._storeObj, '"+storeKeys[i]
@@ -37,11 +65,6 @@ module.exports = function(source) {
 	filename = filename.replace(".js", "");
 	filename += ".js";
 	var resourcePath = this.resourcePath;
-	
-	if(!first) {
-console.log(resourcePath.split("\\src")[0]+"/src/"+filename);
-		first = true;
-	}
 	fs.writeFileSync(resourcePath.split("\\src")[0]+"/src/"+filename, storeStr, "utf-8");
 	var data = fs.readFileSync(resourcePath.split("\\src")[0]+"/src/main.js", "utf-8");
 	data = data.replace("import'./"+filename+"'\n", "");
