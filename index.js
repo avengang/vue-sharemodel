@@ -34,7 +34,8 @@ module.exports = function(source) {
 							+"window._storeObj[k] = o;\n"
 						+"} else {\n"
 							+"window._storeObj[k] = p1;\n"
-						+"};\n"
+						+"}\n"
+					+"};\n"
 					+"window.$initShareModel = "
 					+"function(k, v) {\n"
 						+"if(k.indexOf('window._storeObj') == -1) {\n"
@@ -44,7 +45,8 @@ module.exports = function(source) {
 						+"k = k.replace('window._storeObj', '');\n"
 						+"if(window.__storeObj[k]==null || window.__storeObj[k]==undefined) {\n"
 							+"window._storeObj[k] = v;\n"
-						+"};\n";
+						+"}\n"
+					+"};\n";
 	
 	for(var i=0,ii=storeKeys.length;i<ii;i++) {
 		storeStr += "Object.defineProperty(window._storeObj, '"+storeKeys[i]
@@ -127,7 +129,7 @@ function dealSource(source, componentPath) {
 		
 		for(i=0,ii=storeR.length;i<ii;i++) {
 			var str = storeR[i].replace("@store.", "");
-			script = script.replace(storeR[i], "\n window._storeObj." + str);
+			script = script.replace(storeR[i], "window._storeObj." + str);
 		}
 	}
 	source = "<template>" + template + "</template>" + "<script>" + script + "</script>" + "<style" + style + "</style>";

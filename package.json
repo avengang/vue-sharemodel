@@ -1,6 +1,6 @@
 {
   "name": "vue-sharemodel",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "vue全局对象",
   "main": "index.js",
   "scripts": {
